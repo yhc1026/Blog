@@ -1,0 +1,62 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: user-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 43.138.24.159:8848
+    sentinel:
+      transport:
+        dashboard: 127.0.0.1:8100 #sentinel控制台地址
+        client-ip: 127.0.0.1 #连接本地Sentinel 可以不配置, 连接服务器Sentinel 需要配置⼀下client-ip
+  datasource:
+    url: jdbc:mysql://localhost:3306/spring_cloud_user?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      connect-timeout: 60s
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: 5s
+  rabbitmq:
+    addresses: amqp://admin:123456@43.138.24.159:5672/blog
+    listener:
+      simple:
+        acknowledge-mode: manual
+  mail:
+    host: smtp.163.com
+    port: 465
+    username: yanghaochen041026@163.com
+    password: GXnkp46bChy5ML3P  # 确认是最新生成的SMTP授权码
+    default-encoding: UTF-8  # 新增：避免中文乱码，同时辅助认证
+    properties:
+      mail:
+        smtp:
+          auth: true  # 强制开启认证
+          ssl:
+            enable: true  # 465端口必须开启SSL
+            required: true
+          socketFactory: # 新增：QQ邮箱465端口核心配置
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
+          starttls: # 关键：关闭TLS，避免和SSL冲突
+            enable: false
+            required: false
+        debug: true  # 新增：开启调试日志，能看到认证全过程（排查用）
+      personal: "测试，在application.yml中设置"  # 非核心，保留即可
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+logging:
+  file:
+    name: user.log
